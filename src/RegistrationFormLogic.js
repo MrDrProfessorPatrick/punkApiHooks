@@ -1,22 +1,18 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RegistrationForm } from "./RegistrationForm";
 
-export function RegistrationFormLogic() {
-  const [isOpened, setIsOpened] = useState(false);
+export function RegistrationFormLogic({isClosedForm, closeForm}){
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   let [emailIsCorrect, setEmailCorrect] = useState(true);
-  let [emailIsFocusOut, setEmailFocusChecker] = useState(false);
+  let [emailIsFocusOut, setEmailFocusChecker] = useState(false); 
   let [passwordIsLong, setPasswordCheck] = useState(false)
   let [passwordFocusOut, setPasswordFocusOut] = useState(false)
   
   const messageIncorrectEmail = "Incorrect Email";
   const messageShortPassword = "Password must be longer then 6 symbols";
-
-  function openCloseForm() {
-    setIsOpened(!isOpened);
-  }
 
   function handleEmailChange(e) {
     setEmail(e.target.value);
@@ -32,7 +28,7 @@ export function RegistrationFormLogic() {
      setEmailFocusChecker(true)
       console.log('EMAIL IS INCORRECT')
     } else {
-      setEmailCorrect(false);
+      setEmailCorrect(true);
       setEmailFocusChecker(true);
     }
     console.log("email corectness function");
@@ -43,7 +39,7 @@ export function RegistrationFormLogic() {
     if (password.length < 6) {
       setPasswordCheck(false);
       setPasswordFocusOut(true);
-    } else {
+    } else { 
       setPasswordCheck(true);
       setPasswordFocusOut(true);
     }
@@ -52,10 +48,10 @@ console.log('email is Correnct',emailIsCorrect, emailIsFocusOut )
 
   return (
     <React.Fragment>
-      <button className="open-button" onClick={openCloseForm}>
-        {!isOpened ? "Open Form" : "Close Form"}
+      <button className="open-button" >
+        {!isClosedForm ? "Open Form" : "Close Form"}
       </button>
-      {isOpened && (
+      {isClosedForm && (
         <RegistrationForm
           email={email}
           password={password}
@@ -69,7 +65,6 @@ console.log('email is Correnct',emailIsCorrect, emailIsFocusOut )
           checkPasswordCorrectness = {checkPasswordCorrectness}
           messageIncorrectEmail = {messageIncorrectEmail}
           messageShortPassword = {messageShortPassword}
-
         />
       )}
     </React.Fragment>

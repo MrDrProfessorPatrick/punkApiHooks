@@ -15,8 +15,10 @@
 }
 
 .nameDescriptions{
-  border:1px solid white
+  border:1px solid white;
+  
 }
+
 
 .fullinfo{
   border: 1px solid white
@@ -48,9 +50,10 @@
 }
 
 .showButton{
-  position: absolute;
+  position: relative;
   background-color: darkgrey;
   width: 100px;
   height: 30px;
   right: 0px;
+  float: right;
 }

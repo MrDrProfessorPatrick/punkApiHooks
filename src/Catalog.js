@@ -16,6 +16,7 @@ export function Catalog() {
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [statusRequest, setStatusRequset] = useState(Statuses.INITIAL);
+  let [isClosedForm, setCloseForm] = useState(false);
 
   function filterList(searchItem) {
     let res = list.filter((item) => {
@@ -50,6 +51,18 @@ export function Catalog() {
     console.log("filteredList2", filteredList);
   }
 
+  function closeForm(e){
+    console.log('CLASSNAME',e.target.className)
+    console.log('isClosedForm',isClosedForm)
+    if(e.target.className !== "open-button" && isClosedForm === false) return
+    if(e.target.className === "open-button" && isClosedForm === false){setCloseForm(true)}
+    if(e.target.className === "open-button" && isClosedForm === true){setCloseForm(false)}
+    if((e.target.className !== 'form-container' && e.target.className !== "open-button") && isClosedForm){
+      setCloseForm(false);
+      console.log("THIS IF WORKS")
+    }
+  }
+
   async function getListProd(url) {
     let response = await fetch(url); //'https://api.punkapi.com/v2/beers'
     let results = await response.json();
@@ -63,7 +76,7 @@ export function Catalog() {
     }
     return results;
   }
-
+  console.log("isClosed", isClosedForm)
   return (
     <div>
     {statusRequest === Statuses.INITIAL && (
@@ -71,11 +84,11 @@ export function Catalog() {
     )}
 
      {statusRequest === Statuses.SUCCESSFUL && (
-      <div className = "catalog">
+      <div className = "catalog" onClick = {(e) => {closeForm(e)}}>
       <section className = "searchSort">
       <Search filterList={filterList} />
       <SortForm sortList={sortList} />
-      <RegistrationFormLogic />
+      <RegistrationFormLogic isClosedForm = {isClosedForm} closeForm = {(e) => {closeForm(e)}} />
       </section>
       <aside className = "cards">
       <Cards data={filteredList} />
