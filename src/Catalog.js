@@ -1,21 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./App.css";
-//import { Statuses, urls } from "./constants";
+import { Statuses, urls } from "./constants";
 import { Cards } from "./Cards";
 import { Search } from "./Search";
 import { SortForm } from "./SortForm";
 import { RegistrationFormLogic } from "./RegistrationFormLogic";
-
-const Statuses = {
-  INITIAL: "initial",
-  FAILED: "failed",
-  SUCCESSFUL: "successful",
-};
-
-const urls = {
-  punk: "https://api.punkapi.com/v2/beers",
-};
+import {Error} from "./Error"
 
 export function Catalog() {
   useEffect(() => {
@@ -24,7 +15,7 @@ export function Catalog() {
 
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
-  const [statusRequest, setStatusRequset] = useState();
+  const [statusRequest, setStatusRequset] = useState(Statuses.INITIAL);
 
   function filterList(searchItem) {
     let res = list.filter((item) => {
@@ -66,6 +57,7 @@ export function Catalog() {
     if (response.ok) {
       setList(results);
       setFilteredList(results);
+      setStatusRequset(Statuses.SUCCESSFUL)
     } else {
       setStatusRequset(Statuses.FAILED);
     }
@@ -73,8 +65,14 @@ export function Catalog() {
   }
 
   return (
-    <div className = "catalog">
-    <section className = "searchSort">
+    <div>
+    {statusRequest === Statuses.INITIAL && (
+      <p style={{ textAlign: "center", padding: 20 }}>Loading...</p>
+    )}
+
+     {statusRequest === Statuses.SUCCESSFUL && (
+      <div className = "catalog">
+      <section className = "searchSort">
       <Search filterList={filterList} />
       <SortForm sortList={sortList} />
       <RegistrationFormLogic />
@@ -82,6 +80,12 @@ export function Catalog() {
       <aside className = "cards">
       <Cards data={filteredList} />
       </aside>
+      </div>
+     )}   
+
+     {statusRequest === Statuses.FAILED && (
+      <Error error={statusRequest} />
+     )}
     </div>
-  );
+  )
 }
